@@ -1,4 +1,6 @@
 import random
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix
 
 from consts import *
 from utils import normalize_values
@@ -13,19 +15,24 @@ class Tester(object):
         features = ','.join(feature_list)
         # duration, dp_9_bytes, dp_10_bytes, dp_11_bytes, dp_12_bytes
         logger.debug("Reading features from DB")
-        samples = self.db.execute("select id,bruteforce,{features} from {table};".format(features=features, table=FLOW_TABLE))
+        samples = self.db.execute("select bruteforce,{features} from {table};".format(features=features, table=FLOW_TABLE))
 
         samples = random.sample(samples, size)
         assert len(samples) == size, "Sample size isn't equal to amount wanted"
 
         logger.info("Normalizing sampled values")
-        self.samples = normalize_values(samples)
+        norm_samples = normalize_values(samples)
+        self.labels = [s[0] for s in norm_samples]
+        self.data = [s[1:] for s in norm_samples]
 
     def test_algorithm(self, detector, extra_param=None):
-        #TODO: Cross validation
         sep_param = 0.5
-        train = self.samples[:round(len(self.samples)*sep_param)]
-        test = self.samples[round(len(self.samples)*sep_param):]
-        d = detector(train, test)
-        d.test_detector(extra_param)
+        data_train, data_test, labels_train, labels_test = train_test_split(
+            self.data, self.labels, test_size=sep_param)
+
+        d = detector(data_train, data_test, labels_train, extra_param)
+        predictions = d.test_detector()
+        logger.info("Results (full report in log):")
+        logger.info(confusion_matrix(labels_test, predictions))
+        logger.debug(classification_report(labels_test, predictions))
 

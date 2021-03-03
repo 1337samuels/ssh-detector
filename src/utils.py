@@ -46,3 +46,9 @@ def normalize_values(vecs):
         normalized_vectors.append(new_vec)
 
     return normalized_vectors
+
+def get_majority(values):
+    label_hist = {0: 0, 1: 0}
+    for l in values:
+        label_hist[l] += 1
+    return 0 if label_hist[0] > label_hist[1] else 1
