@@ -33,6 +33,6 @@ class Tester(object):
         d = detector(data_train, data_test, labels_train, extra_param)
         predictions = d.test_detector()
         logger.info("Results (full report in log):")
-        logger.info(confusion_matrix(labels_test, predictions))
-        logger.debug(classification_report(labels_test, predictions))
+        logger.info("\n{}".format(confusion_matrix(labels_test, predictions)))
+        logger.debug("\n{}".format(classification_report(labels_test, predictions)))
 
