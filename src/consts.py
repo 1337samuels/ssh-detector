@@ -1,0 +1,5 @@
+DB_PATH = '../DB/ssh-annotated.sqlite'
+FLOW_TABLE = 'flows'
+LOG_PATH = '../logs/ssh_detector_{}_{}_{}_{}_{}_{}.log'
+LOGGER_NAME = 'ssh_detector_logger'
+URI_STRING = 'file:{path}?mode=ro'
