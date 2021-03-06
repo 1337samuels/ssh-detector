@@ -15,9 +15,12 @@ class Tester(object):
         features = ','.join(feature_list)
         # duration, dp_9_bytes, dp_10_bytes, dp_11_bytes, dp_12_bytes
         logger.debug("Reading features from DB")
-        samples = self.db.execute("select bruteforce,{features} from {table};".format(features=features, table=FLOW_TABLE))
+        true_samples = self.db.execute("select bruteforce,{features} from {table} where bruteforce=1;".format(features=features, table=FLOW_TABLE))
+        false_samples = self.db.execute("select bruteforce,{features} from {table} where bruteforce=0;".format(features=features, table=FLOW_TABLE))
 
-        samples = random.sample(samples, size)
+        false_samples = random.sample(false_samples, size // 7)
+        true_samples = random.sample(true_samples, size - (size // 7))
+        samples = true_samples + false_samples
         assert len(samples) == size, "Sample size isn't equal to amount wanted"
 
         logger.info("Normalizing sampled values")

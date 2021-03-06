@@ -11,7 +11,7 @@ def perform_tests_on_db(db):
     t = Tester(db)
 
     features1 = ["duration", "dp_9_bytes", "dp_10_bytes", "dp_11_bytes", "dp_12_bytes"]
-    features2 = ["bytes_out", "avgp_len", "num_pkts_out", "varp_len"]
+    features2 = ["avgp_len", "ldp_len", "duration", "dp_13_bytes", "bytes_in"]
     fs = [features1, features2]
 
     for i in range(len(fs)):
