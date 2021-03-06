@@ -36,7 +36,7 @@ def feature_select(db : SqlDatabase, classifier):
     features = [f[0] for f in features if f[0] not in ['id', 'bruteforce']]
     logger.info(f"Features are: {features}")
     t = Tester(db)
-    t.update_samples_by_features(features, 30000)
+    t.update_samples_by_features(features, 70000)
     outfeatures = t.find_features(SvmDetector)
     features = list(zip(features, outfeatures[0]))
     features.sort(key=lambda x: abs(x[1]), reverse=True)
