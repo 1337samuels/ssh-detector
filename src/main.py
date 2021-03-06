@@ -4,6 +4,7 @@ from db_reader import SqlDatabase
 from utils import setup_logging
 from detectors import KnnDetector, SvmDetector
 from tester import Tester
+from sklearn.model_selection import train_test_split
 
 from logging import getLogger; logger = getLogger(LOGGER_NAME)
 
@@ -28,6 +29,19 @@ def perform_tests_on_db(db):
             logger.info("Testing SVM Detector on kernel={}".format(k))
             t.test_algorithm(SvmDetector, k)
 
+def feature_select(db : SqlDatabase, classifier):
+    features = db.get_column_names()
+    assert classifier in features, "Classifier must be in features"
+    features = db.execute(f"select name from pragma_table_info('{FLOW_TABLE}') where type='integer';")
+    features = [f[0] for f in features if f[0] not in ['id', 'bruteforce']]
+    logger.info(f"Features are: {features}")
+    t = Tester(db)
+    t.update_samples_by_features(features, 30000)
+    outfeatures = t.find_features(SvmDetector)
+    features = list(zip(features, outfeatures[0]))
+    features.sort(key=lambda x: abs(x[1]), reverse=True)
+    logger.info(f"Features ordered by weights: {features}")
+
 def main():
     setup_logging()
     logger.critical("Welcome to the SSH Detector!")
@@ -36,7 +50,7 @@ def main():
     logger.debug("Opened DB")
     try:
         logger.debug("Start tests")
-        perform_tests_on_db(db)
+        feature_select(db, "bruteforce")
     finally:
         db.close()
         logger.debug("Closed DB")

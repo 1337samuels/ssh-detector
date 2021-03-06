@@ -41,7 +41,7 @@ def normalize_values(vecs):
         for value_index in range(2, len(vecs[0])):
             offset_value = vec[value_index] - min_values[value_index]
             offset_max = max_values[value_index] - min_values[value_index]
-            normalized_value = offset_value / offset_max
+            normalized_value = offset_value / (offset_max if offset_max != 0 else 1)
             new_vec.append(normalized_value)
         normalized_vectors.append(new_vec)
 
