@@ -17,10 +17,11 @@ class Tester(object):
         logger.debug("Reading features from DB")
         samples = self.db.execute("select bruteforce,{features} from {table};".format(features=features, table=FLOW_TABLE))
 
+        size = size if size else len(samples)
         samples = random.sample(samples, size)
         assert len(samples) == size, "Sample size isn't equal to amount wanted"
 
-        logger.info("Normalizing sampled values")
+        logger.debug("Normalizing sampled values")
         norm_samples = normalize_values(samples)
         self.labels = [s[0] for s in norm_samples]
         self.data = [s[1:] for s in norm_samples]
@@ -32,15 +33,12 @@ class Tester(object):
 
         d = detector(data_train, data_test, labels_train, extra_param)
         predictions = d.test_detector()
-        logger.info("Results (full report in log):")
-        logger.info("\n{}".format(confusion_matrix(labels_test, predictions)))
+        logger.debug("Results:")
+        logger.debug("\n{}".format(confusion_matrix(labels_test, predictions)))
         logger.debug("\n{}".format(classification_report(labels_test, predictions)))
 
-    def find_features(self, detector):
-        data_train, data_test, labels_train, labels_test = train_test_split(
-            self.data, self.labels, test_size=0.0000000001)
-
-        d = detector(data_train, data_test, labels_train, "linear")
+    def find_features(self, detector, extra_parameter):
+        d = detector(self.data, [], self.labels, extra_parameter)
         return d.extract_features()
 
         

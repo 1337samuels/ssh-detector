@@ -11,4 +11,8 @@ class Detector(object):
 
     @abstractmethod
     def test_detector(self):
-        raise NotImplementedError("Not implemented test_detector method for abstract detector")
+        raise NotImplementedError("Not implemented test_detector method for detector")
+
+    @abstractmethod
+    def extract_features(self):
+        raise NotImplementedError("Not implemented extract_features method for detector")
