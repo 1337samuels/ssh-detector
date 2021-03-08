@@ -13,7 +13,6 @@ class Tester(object):
 
     def update_samples_by_features(self, feature_list, size):
         features = ','.join([f"`{f}`" for f in feature_list])
-        # duration, dp_9_bytes, dp_10_bytes, dp_11_bytes, dp_12_bytes
         logger.debug("Reading features from DB")
         samples = self.db.execute("select bruteforce,{features} from {table};".format(features=features, table=FLOW_TABLE))
 
@@ -27,7 +26,7 @@ class Tester(object):
         self.data = [s[1:] for s in norm_samples]
 
     def test_algorithm(self, detector, extra_param=None):
-        sep_param = 0.5
+        sep_param = TRAIN_TEST_PARTITION
         data_train, data_test, labels_train, labels_test = train_test_split(
             self.data, self.labels, test_size=sep_param)
 

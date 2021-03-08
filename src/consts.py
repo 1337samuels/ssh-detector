@@ -13,3 +13,4 @@ PAPER_FEATURES = ["duration", "num_pkts_in", "num_pkts_out", "bytes_in", "bytes_
 # ML consts
 KNN_VALUES = [3, 5, 7]
 SVM_KERNELS = ['linear', 'poly', 'rbf']
+TRAIN_TEST_PARTITION = 0.5
