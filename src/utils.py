@@ -5,6 +5,7 @@ import math
 from consts import *
 from logging import getLogger; logger = getLogger(LOGGER_NAME)
 
+
 def setup_logging():
     logger = logging.getLogger(LOGGER_NAME)
     logger.setLevel(logging.DEBUG)
@@ -31,21 +32,28 @@ def eucledian_distance(vec1, vec2):
         distance += pow((float(vec1[i]) - float(vec2[i])), 2)
     return math.sqrt(distance)
 
+
 def normalize_values(vecs):
+    """
+    Normalizes all values in all the vectors, ignoring the first index (which is assumed to be the label)
+    :param vecs: A list of vectors/tuples consisting of a label and then a series of integers
+    :return: A list of lists of normalized integers (in [0,1])
+    """
     normalized_vectors = []
     min_values = list(map(min, zip(*vecs)))
     max_values = list(map(max, zip(*vecs)))
 
     for vec in vecs:
-        new_vec = [vec[0], vec[1]]
-        for value_index in range(2, len(vecs[0])):
+        new_vec = [vec[0]]
+        for value_index in range(1, len(vec)):
             offset_value = vec[value_index] - min_values[value_index]
             offset_max = max_values[value_index] - min_values[value_index]
-            normalized_value = offset_value / offset_max
+            normalized_value = offset_value / (offset_max if offset_max != 0 else 1)
             new_vec.append(normalized_value)
         normalized_vectors.append(new_vec)
 
     return normalized_vectors
+
 
 def get_majority(values):
     label_hist = {0: 0, 1: 0}
