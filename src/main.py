@@ -50,10 +50,10 @@ def main_logic(db):
     logger.debug(f"Chose features {our_features}")
 
     logger.info("Running tests on features from paper!")
-    perform_tests_on_db(db, PAPER_FEATURES, None)
+    perform_tests_on_db(db, PAPER_FEATURES, 15000)
 
     logger.info("Running tests on features we chose by SVM weight!")
-    perform_tests_on_db(db, our_features, None)
+    perform_tests_on_db(db, our_features, 15000)
 
 
 def main():

@@ -34,7 +34,7 @@ class Tester(object):
         predictions = d.test_detector()
         logger.debug("Results:")
         logger.debug("\n{}".format(confusion_matrix(labels_test, predictions)))
-        logger.debug("\n{}".format(classification_report(labels_test, predictions)))
+        logger.debug("\n{}".format(classification_report(labels_test, predictions, digits=4)))
 
     def find_features(self, detector, extra_parameter):
         d = detector(self.data, [], self.labels, extra_parameter)
